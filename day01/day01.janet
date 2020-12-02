@@ -15,6 +15,7 @@
   (first
     (seq [[i a] :pairs ns
           [j b] :pairs (drop (inc i) ns)
+          :when (> 2019 (+ a b))
            c :in (drop (+ i j 1) ns)
           :when (= 2020 (+ a b c))]
       (* a b c))))
