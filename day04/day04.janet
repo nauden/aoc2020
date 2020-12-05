@@ -5,12 +5,6 @@
           (map (partial string/split ":"))
           (flatten))))
 
-(def input
-  (->> (slurp "input")
-       (string/trim)
-       (string/split "\n\n")
-       (map parse-passport)))
-
 (defn valid? [passport]
   (and (passport "byr")
        (passport "iyr")
@@ -20,7 +14,14 @@
        (passport "ecl")
        (passport "pid")))
 
-(print "Part 1: " (count valid? input))
+(def input
+  (->> (slurp "input")
+       (string/trim)
+       (string/split "\n\n")
+       (map parse-passport)
+       (filter valid?)))
+
+(print "Part 1: " (length input))
 
 
 (defn valid-number? [str lo hi]
@@ -44,7 +45,6 @@
 
 (defn valid2? [passport]
   (and
-     (valid? passport)
      (valid-number? (passport "byr") 1920 2002)
      (valid-number? (passport "iyr") 2010 2020)
      (valid-number? (passport "eyr") 2020 2030)
