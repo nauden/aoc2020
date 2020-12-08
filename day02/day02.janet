@@ -10,9 +10,7 @@
        (map (partial peg/match entry))))
 
 (defn valid? [[lo hi c pw]]
-  (def f (frequencies pw))
-
-  (<= lo (get f c 0) hi))
+  (<= lo (count (partial = c) pw) hi))
 
 (defn valid2? [[lo hi c pw]]
   (not=
