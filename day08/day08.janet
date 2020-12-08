@@ -16,13 +16,13 @@
   (var did-finish false)
   (def seen @{})
 
-  (loop [_ :iterate (not (seen ip))]
+  (while (not (seen ip))
+    (put seen ip true)
     (when (>= ip (length program))
       (set did-finish true)
       (break))
 
     (def [op v] (program ip))
-    (put seen ip true)
     (case op
       :acc (do (+= acc v) (++ ip))
       :jmp (+= ip v)
@@ -31,24 +31,18 @@
   [acc did-finish])
 
 (defn fix-program [program]
-  (var done false)
+  (var a 0)
+  (def swap {:jmp :nop :nop :jmp})
 
-  (last
-    (seq [i :range (0 (length program))
-          :until done
-          :let [[op v] (program i)]]
-      (case op
-        :jmp (let [copy (array/concat @[] program)
-                   [acc did-finish] (-> (put copy i [:nop v]) run-program)]
-                (when did-finish
-                  (set done true)
-                  acc))
-
-        :nop (let [copy (array/concat @[] program)
-                   [acc did-finish] (-> (put copy i [:jmp v]) run-program)]
-                (when did-finish
-                  (set done true)
-                  acc))))))
+  (for i 0 (length program)
+    (def [op v] (program i))
+    (when (not= op :acc)
+        (let [[acc did-finish] (run-program (put program i [(swap op) v]))]
+          (put program i [op v])
+          (when did-finish
+            (set a acc)
+            (break)))))
+  a)
 
 (print "Part 1: " (first (run-program input)))
 (print "Part 2: " (fix-program input))
