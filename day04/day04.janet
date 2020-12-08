@@ -43,6 +43,9 @@
   (peg/compile
     ~{:main (* (9 (range "09")) -1)}))
 
+(def eye-colors
+  (struct ;(interpose true ["amb" "blu" "brn" "gry" "grn" "hzl" "oth"]) true))
+
 (defn valid2? [passport]
   (and
      (valid-number? (passport "byr") 1920 2002)
@@ -50,8 +53,7 @@
      (valid-number? (passport "eyr") 2020 2030)
      (valid-height? (passport "hgt"))
      (peg/match hair-color (passport "hcl"))
-     (find (partial = (passport "ecl"))
-           ["amb" "blu" "brn" "gry" "grn" "hzl" "oth"])
+     (eye-colors (passport "ecl"))
      (peg/match passport-id (passport "pid"))))
 
 (print "Part 2: " (count valid2? input))
