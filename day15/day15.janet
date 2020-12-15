@@ -13,7 +13,7 @@
 
   (loop [turn :range [0 turns]]
     (when (zero? (mod (inc turn) 100_000))
-      (prinf "\r%.2f%" (* 100 (/ turn 30_000_000)))
+      (prinf "\r%.2f%%" (* 100 (/ turn 30_000_000)))
       (flush))
 
     (set n (cond
@@ -27,7 +27,7 @@
 
     (put last-seen n turn))
 
-  (prinf "\r                    \r")
+  (prin "\r                    \r")
   (flush)
   n)
 
