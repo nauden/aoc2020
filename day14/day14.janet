@@ -25,14 +25,14 @@
 (defn addresses [address floating-bits]
   (if (empty? floating-bits)
     [address]
-    (let [bit (last floating-bits)
+    (let [bit (first floating-bits)
           adr1 (bor address (blshift (int/u64 1) bit)) # set bit to 1
           adr0 (bxor adr1 (blshift (int/u64 1) bit))]  # flip bit (set to zero)
-      (array 
-        ;(addresses adr0 (array/slice floating-bits 0 -2))
-        ;(addresses adr1 (array/slice floating-bits 0 -2))))))
-    
-         
+      (array
+        ;(addresses adr0 (drop 1 floating-bits))
+        ;(addresses adr1 (drop 1 floating-bits))))))
+
+
 (defn initialize2 [str]
   (var floating-bits nil)
   (var mask nil)
@@ -43,7 +43,7 @@
       (let [mask-str (string/slice line 7)]
         (set floating-bits (string/find-all "X" (string/reverse mask-str)))
         (set mask (int/u64
-                    (scan-number 
+                    (scan-number
                      (string "2r" (string/replace-all "X" "0" mask-str))))))
 
       (let [[adr val] (peg/match mem-peg line)]
