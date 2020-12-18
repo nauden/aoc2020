@@ -98,4 +98,45 @@
       (my-ticket (fields name)))))
 
 
-(print "Part 2: " (determine-fields input))
+(defn determine-fields2 [{:rules rules
+                          :my-ticket my-ticket
+                          :nearby-tickets nearby-tickets}]
+
+  (def all-tickets (array my-ticket ;nearby-tickets))
+  (def all-rules (keys rules))
+
+  (def l (length my-ticket))
+  (def ll (length all-tickets))
+
+  (def cand @{})
+  (loop [i :range [0 l]
+         :let [ns (seq [ticket :in all-tickets] (ticket i))]
+         rule :in all-rules]
+    (when (all (partial matches-rule? rules rule) ns)
+       (put-in cand [i rule] true)))
+
+  (def fields @{})
+  (while (> l (length fields))
+    (loop [i :range [0 l]
+           :let [rule (first (keys (cand i)))]
+           :when (and (not (fields rule))
+                      (one? (length (cand i))))]
+      (for j 0 l
+       (when (not= j i)
+         (put-in cand [j rule] nil)))
+      (put fields rule i)))
+
+  (product
+    (seq [[name i] :pairs fields
+          :when (string/has-prefix? "departure" name)]
+      (my-ticket (fields name)))))
+
+    
+    
+  
+    
+    
+          
+
+(print "Part 2: " (determine-fields2 input))
+
