@@ -131,12 +131,11 @@
           :when (string/has-prefix? "departure" name)]
       (my-ticket (fields name)))))
 
-    
-    
-  
-    
-    
-          
+
+
+
+
+
+
 
 (print "Part 2: " (determine-fields2 input))
-
